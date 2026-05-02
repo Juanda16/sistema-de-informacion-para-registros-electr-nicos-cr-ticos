@@ -28,3 +28,12 @@ __pycache__/
 # Logs y temporales
 *.log
 *.tmp
+
+# Instrucciones y notas solo locales (rutas, cuentas, máquina)
+/docs/
+
+# Entregables marcados como confidenciales (informe/manuales/propuesta) — copia local o repo privado
+/Informe final de prácticas Laura Tobón y Juan DAvid Arismendy.docx
+/Manual sistema de all fil V0.2 (2).pdf
+/Manual técnico all fil V0.2 (2).pdf
+/PropuestaProyectoPráctica_Laura Tobón_Juan David Arismendy_Firma_Nova_UdeA.docx (1).pdf

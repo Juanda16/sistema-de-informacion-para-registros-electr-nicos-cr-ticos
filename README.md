@@ -14,7 +14,7 @@ Proyecto desarrollado en colaboración entre la **Universidad de Antioquia** y *
 
 ## Confidencialidad
 
-Parte del contenido (informe, manuales y detalles de planta) está marcado como **confidencial** frente a terceros. Este repositorio debe usarse solo entre **autorizados** (UdeA, Nova Control, colaboradores explícitos). No publicar en foros abiertos ni exponer credenciales, IPs ni datos de producción.
+Parte del contenido (informe, manuales y detalles de planta) está marcado como **confidencial** frente a terceros. Este repositorio **público** incluye solo código y documentación genérica del enfoque técnico; **no** se versionan aquí el informe, manuales ni notas personales de configuración (permanecen en copia local o en un medio privado acordado con UdeA/Nova Control). No exponer credenciales, IPs ni datos de producción en issues ni commits.
 
 ## Objetivo (resumen)
 
@@ -34,19 +34,15 @@ La propuesta inicial contemplaba SQLite; en la ejecución se adoptó **SQL Serve
 ## Estructura del repositorio
 
 ```
-├── README.md                 # Este archivo
+├── README.md
 ├── .gitignore
-├── docs/
-│   ├── git-paso-a-paso-juanda16.md  # Desde cero: llave SSH + push (Juanda16)
-│   └── configuracion-git-mac.md   # Cuenta GitHub / identidad separada del trabajo (Mac)
 ├── scripts/
 │   ├── sql/                  # Scripts T-SQL (orden sugerido por prefijo)
-│   └── powershell/         # Blindaje NTFS carpeta de datos SQL
-├── aveva/                    # Reservado para exportes/notas del proyecto SCADA
-└── [documentos de práctica: informe, manuales, propuesta en PDF/DOCX]
+│   └── powershell/           # Blindaje NTFS carpeta de datos SQL
+└── aveva/                    # Reservado para exportes del SCADA (opcional; no subir secretos)
 ```
 
-Los documentos académicos y de empresa en la raíz son la **fuente normativa y de contexto**; la automatización repetible del despliegue de BD está en **`scripts/`**.
+La carpeta **`docs/`** (notas personales de Git/Mac) y los **PDF/DOCX confidenciales** no se suben al remoto público; quedan solo en tu máquina si los conservas fuera de Git o en un **repositorio privado** aparte.
 
 ## Scripts SQL (orden recomendado)
 
@@ -78,18 +74,13 @@ Ejecutar en **SQL Server Management Studio** (o herramienta equivalente), tras r
 
 - FDA **21 CFR Part 11** (registros y firmas electrónicas)  
 - Principios de integridad de datos **ALCOA+**  
-- Documentación del proyecto: informe final de prácticas, manual técnico V0.2, manual de operación V0.2, propuesta (en la raíz del repo)
+- Documentación académica y de empresa (informe, manuales V0.2, propuesta): **no** están en este remoto público; consultar copias locales o el canal acordado con la universidad y Nova Control.
 
 ## Git y trabajo en equipo
 
-**Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)  
-**Primer uso / push con la cuenta Juanda16:** guía ordenada con todos los comandos → **[docs/git-paso-a-paso-juanda16.md](docs/git-paso-a-paso-juanda16.md)**.
+**Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)
 
-Si `git push` falla con *Permission denied* a otra cuenta GitHub, revisa la **sección 7** de [docs/configuracion-git-mac.md](docs/configuracion-git-mac.md) (llave SSH de **Juanda16** vs `insteadOf` global).
-
-En este repositorio la identidad de commit está definida **solo aquí** (correo UdeA), sin cambiar tu configuración Git global de otros proyectos. Contexto adicional:
-
-**[docs/configuracion-git-mac.md](docs/configuracion-git-mac.md)**
+Para clonar, colaborar y autenticación SSH con varias cuentas en el mismo Mac, usa la documentación oficial de GitHub: [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh) y [Managing multiple accounts](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-personal-account/managing-multiple-accounts). En tu clon local puedes fijar `git config user.name` y `user.email` solo en esa carpeta (sin tocar el `~/.gitconfig` global).
 
 ```bash
 git clone https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos.git
