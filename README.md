@@ -36,6 +36,8 @@ La propuesta inicial contemplaba SQLite; en la ejecución se adoptó **SQL Serve
 ```
 ├── README.md                 # Este archivo
 ├── .gitignore
+├── docs/
+│   └── configuracion-git-mac.md   # Cuenta GitHub / identidad separada del trabajo (Mac)
 ├── scripts/
 │   ├── sql/                  # Scripts T-SQL (orden sugerido por prefijo)
 │   └── powershell/         # Blindaje NTFS carpeta de datos SQL
@@ -78,6 +80,10 @@ Ejecutar en **SQL Server Management Studio** (o herramienta equivalente), tras r
 - Documentación del proyecto: informe final de prácticas, manual técnico V0.2, manual de operación V0.2, propuesta (en la raíz del repo)
 
 ## Git y trabajo en equipo
+
+En este repositorio la identidad de commit está definida **solo aquí** (correo UdeA), sin cambiar tu configuración Git global de otros proyectos. Para **subir código con otra cuenta de GitHub** que la del trabajo (SSH, llave y remoto sin mezclar credenciales), sigue la guía:
+
+**[docs/configuracion-git-mac.md](docs/configuracion-git-mac.md)**
 
 ```bash
 git clone <url-del-remoto>
