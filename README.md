@@ -81,7 +81,8 @@ Ejecutar en **SQL Server Management Studio** (o herramienta equivalente), tras r
 
 ## Git y trabajo en equipo
 
-**Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)
+**Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)  
+Si `git push` falla con *Permission denied* a otra cuenta GitHub, revisa la **sección 7** de [docs/configuracion-git-mac.md](docs/configuracion-git-mac.md) (llave SSH de **Juanda16** vs `insteadOf` global).
 
 En este repositorio la identidad de commit está definida **solo aquí** (correo UdeA), sin cambiar tu configuración Git global de otros proyectos. Para **subir código con otra cuenta de GitHub** que la del trabajo (SSH, llave y remoto sin mezclar credenciales), sigue la guía:
 

@@ -125,3 +125,45 @@ Eso **no** cambia la autenticación; sigues necesitando SSH con host alias o tok
 | Varios repos académicos con misma identidad | `includeIf` + `~/.gitconfig-udea` |
 
 Si en algún momento `git push` falla por permisos, revisa **qué host** usa el remoto (`git remote -v`) y **qué cuenta** responde `ssh -T git@github-udea`.
+
+---
+
+## 7. Error: `Permission to Juanda16/... denied to otra-cuenta`
+
+Eso indica que **SSH está usando la llave de otra cuenta** (p. ej. laboral o `juand-arismendy`) mientras el repo vive bajo **Juanda16**.
+
+Causas frecuentes en este Mac:
+
+1. Tienes en `~/.gitconfig` una regla **`url.*.insteadOf`** que convierte `https://github.com/...` en SSH hacia `github.com`, y el agente SSH ofrece primero la llave “equivocada”.
+2. El remoto apunta a `github.com` pero todas las llaves van al mismo host.
+
+**Solución A (recomendada ya documentada):** remoto `git@github-udea:Juanda16/nombre-repo.git` + bloque `Host github-udea` con la llave registrada en la cuenta **Juanda16**.
+
+**Solución B (solo este repositorio, sin tocar `~/.ssh/config`):** fuerza la llave de Juanda16 al hacer Git en esta carpeta:
+
+```bash
+cd "/Users/juan_arismendy/personal/udea/Practica final"
+# Crea la llave si aún no existe y súbela a GitHub (cuenta Juanda16)
+# ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_github_juanda16 -C "tu-correo@ejemplo.com"
+
+git config core.sshCommand "ssh -i ~/.ssh/id_ed25519_github_juanda16 -o IdentitiesOnly=yes"
+```
+
+Comprueba la cuenta que responde GitHub:
+
+```bash
+ssh -i ~/.ssh/id_ed25519_github_juanda16 -o IdentitiesOnly=yes -T git@github.com
+```
+
+Debe decir **Hi Juanda16**. Luego:
+
+```bash
+git remote set-url origin git@github.com:Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos.git
+git push -u origin main
+```
+
+Para **quitar** la regla solo en este clon (volver al comportamiento por defecto de SSH):
+
+```bash
+git config --unset core.sshCommand
+```
