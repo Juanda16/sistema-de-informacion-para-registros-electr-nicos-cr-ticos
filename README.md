@@ -37,6 +37,7 @@ La propuesta inicial contemplaba SQLite; en la ejecución se adoptó **SQL Serve
 ├── README.md                 # Este archivo
 ├── .gitignore
 ├── docs/
+│   ├── git-paso-a-paso-juanda16.md  # Desde cero: llave SSH + push (Juanda16)
 │   └── configuracion-git-mac.md   # Cuenta GitHub / identidad separada del trabajo (Mac)
 ├── scripts/
 │   ├── sql/                  # Scripts T-SQL (orden sugerido por prefijo)
@@ -82,9 +83,11 @@ Ejecutar en **SQL Server Management Studio** (o herramienta equivalente), tras r
 ## Git y trabajo en equipo
 
 **Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)  
+**Primer uso / push con la cuenta Juanda16:** guía ordenada con todos los comandos → **[docs/git-paso-a-paso-juanda16.md](docs/git-paso-a-paso-juanda16.md)**.
+
 Si `git push` falla con *Permission denied* a otra cuenta GitHub, revisa la **sección 7** de [docs/configuracion-git-mac.md](docs/configuracion-git-mac.md) (llave SSH de **Juanda16** vs `insteadOf` global).
 
-En este repositorio la identidad de commit está definida **solo aquí** (correo UdeA), sin cambiar tu configuración Git global de otros proyectos. Para **subir código con otra cuenta de GitHub** que la del trabajo (SSH, llave y remoto sin mezclar credenciales), sigue la guía:
+En este repositorio la identidad de commit está definida **solo aquí** (correo UdeA), sin cambiar tu configuración Git global de otros proyectos. Contexto adicional:
 
 **[docs/configuracion-git-mac.md](docs/configuracion-git-mac.md)**
 
