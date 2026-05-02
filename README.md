@@ -14,83 +14,76 @@ Proyecto desarrollado en colaboración entre la **Universidad de Antioquia** y *
 
 ## Confidencialidad
 
-Parte del contenido (informe, manuales y detalles de planta) está marcado como **confidencial** frente a terceros. Este repositorio **público** incluye solo código y documentación genérica del enfoque técnico; **no** se versionan aquí el informe, manuales ni notas personales de configuración (permanecen en copia local o en un medio privado acordado con UdeA/Nova Control). No exponer credenciales, IPs ni datos de producción en issues ni commits.
+El informe de prácticas, los manuales de operación y técnico, y la documentación contractual asociada están sujetos a restricciones de difusión acordadas con Nova Control S.A.S. y la universidad. Este repositorio público contiene únicamente material técnico genérico (scripts y descripción del enfoque). No incluir en issues ni en commits credenciales, direcciones internas, datos de producción ni archivos marcados como confidenciales.
 
-## Objetivo (resumen)
+## Objetivo
 
-Transformar datos operativos (alarmas, eventos, setpoints, acciones de operador) en **registros electrónicos íntegros y auditables**: captura tipo **TPS**, reportes y trazabilidad tipo **MIS**, con controles de seguridad, **firma electrónica**, **audit trail** persistido en SQL Server, restricciones de alteración/borrado, auditoría de servidor y endurecimiento del sistema operativo según el manual técnico del proyecto.
+Convertir datos operativos (alarmas, eventos, setpoints, acciones de operador) en **registros electrónicos íntegros y auditables**: capa de captura tipo **TPS**, reportes y trazabilidad tipo **MIS**, con controles de seguridad, **firma electrónica**, **audit trail** en SQL Server, restricciones de alteración y borrado, auditoría de servidor y endurecimiento del sistema operativo según el diseño validado en planta.
 
-## Stack principal
+## Stack
 
-| Componente | Uso |
+| Componente | Rol |
 |------------|-----|
-| **AVEVA Edge** | SCADA/HMI, seguridad Part 11, e-signatures, persistencia hacia SQL |
-| **Microsoft SQL Server** | Base de datos corporativa, históricos, lockdown, SQL Audit |
-| **Windows** | Estación industrial; ACL NTFS sobre datos SQL; gateway AVEVA |
-| **PLC / proceso** | Integración con proceso All-Fill (p. ej. Schneider, Mitsubishi, variador, servo) |
+| **AVEVA Edge** | SCADA/HMI, requisitos Part 11, firmas electrónicas, persistencia hacia SQL |
+| **Microsoft SQL Server** | Históricos, políticas de acceso, SQL Audit |
+| **Windows** | Estación industrial; permisos NTFS sobre datos SQL; servicio gateway AVEVA |
+| **PLC / proceso** | Integración con la línea All-Fill (Schneider, Mitsubishi, variador, servo, entre otros) |
 
-La propuesta inicial contemplaba SQLite; en la ejecución se adoptó **SQL Server** por concurrencia, permisos, auditoría y encaje con TI corporativa.
+La propuesta inicial consideraba SQLite; en la implementación se adoptó **SQL Server** por concurrencia, permisos granulares, auditoría de motor y alineación con entornos corporativos.
 
-## Estructura del repositorio
+## Contenido del repositorio
 
-```
-├── README.md
-├── .gitignore
-├── scripts/
-│   ├── sql/                  # Scripts T-SQL (orden sugerido por prefijo)
-│   └── powershell/           # Blindaje NTFS carpeta de datos SQL
-└── aveva/                    # Reservado para exportes del SCADA (opcional; no subir secretos)
-```
+| Ruta | Contenido |
+|------|-----------|
+| `scripts/sql/` | Scripts T-SQL numerados: creación de logins, lockdown, `DENY` sobre históricos, checksums, auditoría SQL, notas de recuperación |
+| `scripts/powershell/` | Script de restricción de ACL sobre la carpeta de datos de SQL Server |
+| `aveva/` | Carpeta reservada para artefactos opcionales del proyecto SCADA (no versionar secretos ni credenciales) |
 
-La carpeta **`docs/`** (notas personales de Git/Mac) y los **PDF/DOCX confidenciales** no se suben al remoto público; quedan solo en tu máquina si los conservas fuera de Git o en un **repositorio privado** aparte.
+Material académico y corporativo completo (informe, manuales V0.2, propuesta) no forma parte de este remoto público; su custodia corresponde a los canales definidos por la UdeA y la empresa.
 
-## Scripts SQL (orden recomendado)
+## Uso de los scripts SQL
 
-Ejecutar en **SQL Server Management Studio** (o herramienta equivalente), tras revisar nombres de base de datos, rutas y **sustituir placeholders de contraseña**. No ejecutar en producción sin validación interna (IQ/OQ).
+Ejecutar en **SQL Server Management Studio** u otra herramienta equivalente, previa revisión de nombres de base de datos, rutas y sustitución de placeholders de contraseña. Aplicar solo en entornos de prueba o tras protocolo interno (IQ/OQ).
 
-| Archivo | Descripción breve |
-|---------|-------------------|
-| `01_create_database_template.sql` | Referencia / plantilla de creación de BD |
-| `02_create_logins_and_scada_user.sql` | Logins `Admin_Dba` y `User_Aveva`, roles y permisos mínimos para AVEVA |
-| `03_lockdown_disable_windows_and_sa.sql` | Deshabilitar `sa` y ajuste de logins Windows según procedimiento |
+| Archivo | Descripción |
+|---------|-------------|
+| `01_create_database_template.sql` | Plantilla de creación de base de datos |
+| `02_create_logins_and_scada_user.sql` | Logins de administración y de aplicación SCADA, roles y permisos mínimos |
+| `03_lockdown_disable_windows_and_sa.sql` | Deshabilitación de `sa` y ajuste de logins Windows según procedimiento |
 | `04_deny_update_delete_historical_tables.sql` | `DENY DELETE/UPDATE` sobre tablas de histórico (ajustar nombres reales) |
-| `05_add_row_checksum_columns.sql` | Columnas `RowChecksum` (BINARY_CHECKSUM persistido) en históricos |
-| `05_verify_row_checksums.sql` | Verificación: filas donde checksum guardado ≠ recalculado |
-| `06_sql_server_audit.sql` | Auditoría a archivo + especificaciones servidor/BD |
-| `99_emergency_sql_recovery_notes.sql` | Notas de rescate ante lockout (sqlcmd); no es un script único de ejecución |
+| `05_add_row_checksum_columns.sql` | Columnas `RowChecksum` (`BINARY_CHECKSUM` persistido) |
+| `05_verify_row_checksums.sql` | Comprobación de coherencia checksum almacenado vs recalculado |
+| `06_sql_server_audit.sql` | Auditoría a archivo y especificaciones de servidor y base de datos |
+| `99_emergency_sql_recovery_notes.sql` | Procedimiento de rescate ante bloqueo de cuentas (referencia, no ejecutar como script ciego) |
 
-**PowerShell:** `scripts/powershell/Lockdown-SqlDataDirectory.ps1` — restringe ACL de la carpeta de datos de SQL; ejecutar como administrador y con ruta validada.
+**PowerShell:** `scripts/powershell/Lockdown-SqlDataDirectory.ps1` restringe ACL sobre la carpeta de datos de SQL Server; requiere ejecución elevada y ruta validada para la instancia.
 
-**AVEVA Edge:** gran parte de la configuración (tags, pantallas, Database Gateway, `StADOSvr.exe`, cadenas de conexión) vive en el proyecto del software; esta carpeta `aveva/` puede alojar exportes o checklists cuando los organicen.
+La configuración detallada de pantallas, tags y conexión en **AVEVA Edge** reside en el proyecto del SCADA; no se duplica aquí.
 
-## Prerrequisitos típicos
+## Prerrequisitos
 
-- Instancia de **SQL Server** con autenticación mixta habilitada y servicio reiniciado tras el cambio  
-- Carpeta para **SQL Audit** con permisos para la cuenta del servicio SQL  
-- Proyecto AVEVA con runtime probado al menos una vez para que existan tablas de histórico antes de `04` y `05`  
-- Copias de seguridad y ventana de mantenimiento antes de cambios de permisos o lockdown  
+- SQL Server con autenticación mixta habilitada y servicio reiniciado tras el cambio  
+- Carpeta para archivos de **SQL Audit** con permisos para la cuenta del servicio SQL  
+- Al menos una ejecución de runtime AVEVA que cree las tablas de histórico antes de aplicar `04` y `05`  
+- Respaldo y ventana de mantenimiento antes de cambios de permisos o lockdown  
 
-## Referencias normativas y académicas
+## Referencias
 
-- FDA **21 CFR Part 11** (registros y firmas electrónicas)  
-- Principios de integridad de datos **ALCOA+**  
-- Documentación académica y de empresa (informe, manuales V0.2, propuesta): **no** están en este remoto público; consultar copias locales o el canal acordado con la universidad y Nova Control.
+- FDA, [21 CFR Part 11](https://www.accessdata.fda.gov/scripts/cdrh/cfdocs/cfcfr/CFRSearch.cfm?CFRPart=11) (registros y firmas electrónicas)  
+- Principios de integridad de datos **ALCOA+** y guías GxP aplicables al sector regulado  
 
-## Git y trabajo en equipo
+## Repositorio y colaboración
 
-**Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)
-
-Para clonar, colaborar y autenticación SSH con varias cuentas en el mismo Mac, usa la documentación oficial de GitHub: [Connecting to GitHub with SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh) y [Managing multiple accounts](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-personal-account/managing-multiple-accounts). En tu clon local puedes fijar `git config user.name` y `user.email` solo en esa carpeta (sin tocar el `~/.gitconfig` global).
+Código y documentación técnica de este trabajo: [github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)
 
 ```bash
 git clone https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos.git
-cd "Practica final"
-# ... cambios ...
-git add -A && git commit -m "Descripción clara del cambio"
-git push origin main
+cd sistema-de-informacion-para-registros-electr-nicos-cr-ticos
 ```
 
-Convención sugerida: commits en español o inglés, mensaje en una línea que explique el **qué** y el **porqué** breve.
+Para autenticación SSH y gestión de varias identidades en GitHub, la documentación oficial es la referencia: [Conexión con SSH](https://docs.github.com/es/authentication/connecting-to-github-with-ssh) y [Varias cuentas](https://docs.github.com/es/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-personal-account/managing-multiple-accounts).
+
+Los colaboradores pueden usar `git config` **local** al repositorio (`user.name`, `user.email`) según la política de la universidad o del laboratorio, sin modificar la configuración global del equipo.
 
 ---
 
