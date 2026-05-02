@@ -2,7 +2,7 @@
 
 **Práctica profesional — Ingeniería de Sistemas, Universidad de Antioquia**
 
-Proyecto desarrollado en **Nova Control S.A.S.** (Medellín): diseño, implementación y validación de un sistema de información alineado con **FDA 21 CFR Part 11** e integridad de datos (**ALCOA+**), sobre la plataforma **SCADA AVEVA Edge** y **Microsoft SQL Server**, en el contexto de la envasadora de polvos **All-Fill**.
+Proyecto desarrollado en colaboración entre la **Universidad de Antioquia** y **Nova Control S.A.S.** (Medellín): diseño, implementación y validación de un sistema de información alineado con **FDA 21 CFR Part 11** e integridad de datos (**ALCOA+**), sobre la plataforma **SCADA AVEVA Edge** y **Microsoft SQL Server**, en el contexto de la envasadora de polvos **All-Fill**.
 
 ## Autores
 
@@ -81,12 +81,14 @@ Ejecutar en **SQL Server Management Studio** (o herramienta equivalente), tras r
 
 ## Git y trabajo en equipo
 
+**Repositorio remoto:** [Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos](https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos)
+
 En este repositorio la identidad de commit está definida **solo aquí** (correo UdeA), sin cambiar tu configuración Git global de otros proyectos. Para **subir código con otra cuenta de GitHub** que la del trabajo (SSH, llave y remoto sin mezclar credenciales), sigue la guía:
 
 **[docs/configuracion-git-mac.md](docs/configuracion-git-mac.md)**
 
 ```bash
-git clone <url-del-remoto>
+git clone https://github.com/Juanda16/sistema-de-informacion-para-registros-electr-nicos-cr-ticos.git
 cd "Practica final"
 # ... cambios ...
 git add -A && git commit -m "Descripción clara del cambio"
